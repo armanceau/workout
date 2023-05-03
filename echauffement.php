@@ -7,7 +7,11 @@ require "header.php";
     <?php
     include "sqlconnect.php";
 
-    $sql= $connection->prepare("SELECT * FROM echauffement WHERE id_Categorie= :idCateg") ;
+    $sql= $connection->prepare("SELECT e.nom, e.video, c.categ_icons 
+                                FROM echauffement e 
+                                INNER JOIN categorie c ON e.id_Categorie = c.id 
+                                WHERE e.id_Categorie = :idCateg
+                                ") ;
     $sql->bindParam(":idCateg", $_REQUEST['id']);
     $sql->execute();
     $ligne = $sql->fetchall();
@@ -15,16 +19,63 @@ require "header.php";
     foreach($ligne as $echauffement){
         $nom = $echauffement['nom'];
         $video = $echauffement['video'];
+        $categ_icons = $echauffement['categ_icons'];
     }
     ?>
 
 </head>
 
-<body>
+    <body>
 
-    <div class="container"> 
+    <div class="training-container">
+        <div class="top-container">
+            <div>
+                <a href="#" onclick="history.back()"><svg width="50px" height="50px" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" stroke=""><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.9998 8L6 14L12.9998 21" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6 14H28.9938C35.8768 14 41.7221 19.6204 41.9904 26.5C42.2739 33.7696 36.2671 40 28.9938 40H11.9984" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg></a>
+            </div>
+            <div class="img-top">
+                <a href="accueil.php">
+                    <img src="assets\logo.png" height="120" width="120">
+                </a>
+            </div>
+        </div>
 
-        <?php require "nav.php";?>
+        <div class="training-wrapper">
+            <?php 
+                echo '
+                <div class="categorie-card mb-3">
+                    <div class="categorie-img"><img src="'.$categ_icons.'" alt="" width="100%"></div>
+                    <div class="categorie-content">'.$nom.'</div>
+                </div>
+                '
+            ?>
+        </div>
+
+        <div class="video-container">
+            <div class="video-wrapper">
+                <video controls width="100%" height="100%">
+                    <source src="<?php echo $video?>" type="video/webm">
+                </video>
+            </div>
+        </div>
+
+        <div class="mb-80 text-center">
+            <form action="qr_code.php">
+                <button type="submit" class="btn-wrapper">J’ai finis !</button>
+            </form>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <!-- <div class="container"> 
 
         <br>
 
@@ -70,7 +121,8 @@ require "header.php";
             <div class="col-4"> </div>
         </div>
 
-    </div>
-</body>
+    </div> -->
+
+    </body>
 </html>
 
